@@ -9,7 +9,6 @@ import shutil
 parser = argparse.ArgumentParser()
 parser.add_argument('url', type=str, help='url to download from')
 parser.add_argument("--many", action="store_true")
-#parser.add_argument('output_location', type=str, help='where to download')
 
 args = parser.parse_args()
 
