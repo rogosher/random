@@ -1,5 +1,6 @@
 import sys
 import argparse
+import re
 import urllib.request
 from urllib.parse import unquote
 from urllib.error import HTTPError, URLError
@@ -7,6 +8,8 @@ import shutil
 
 parser = argparse.ArgumentParser()
 parser.add_argument('url', type=str, help='url to download from')
+parser.add_argument("--many", action="store_true")
+#parser.add_argument('output_location', type=str, help='where to download')
 
 args = parser.parse_args()
 
@@ -53,25 +56,38 @@ def get_filename(url):
 
     return filename
 
+def proccess_filter(s):
+    index = re.search(r'[^ ]', s).start()
+    char = s[index]
+    end = index+1
+    while end < len(s):
+        if s[end] is char: end+=1
+        else: break
+    print("{} {} {}".format(char, index, end))
+    return index, end
+
 def get_filters(file_name):
     print('Define filter')
     print(file_name)
     name_filter = input('')
-    left_stop = name_filter.find('x')
-    right_stop = name_filter.rfind('x')
+    filters = []
+    offset = 0
+    print(len(name_filter))
+    while len(name_filter) > offset and len(name_filter) - offset > 0:
+        lstop, rstop = proccess_filter(name_filter[offset::])
 
-    if left_stop is right_stop: right_stop+=1
+        counter_start = 0
+        counter_range = 3
+        try:
+            counter_start = int(input('Define start: '))
+            counter_range = int(input('Define range: '))
+        except ValueError:
+            print("Enter a number.")
 
-    counter_start = 0
-    counter_range = 3
-    try:
-        counter_start = int(input('Define start: '))
-        counter_range = int(input('Define range: '))
-    except ValueError:
-        print("Enter a number.")
+        filters.append(((offset+lstop, offset+rstop), counter_start, counter_range)) 
+        offset+=rstop
 
-    return (left_stop, right_stop), counter_start, counter_range
-
+    return filters
 
 def download_files(filters, url, _filename):
     lstop = filters[0][0]
@@ -79,8 +95,9 @@ def download_files(filters, url, _filename):
     for x in range(filters[1],filters[1]+filters[2]):
         filename = _filename[0:lstop:]+str(x)+_filename[rstop::]
         url_ = url+'/'+filename
-        print(url_)
+        sys.stdout.write(url_+' ')
         download_file(url_, unquote(filename))
+        sys.stdout.write('\n')
 
 def download_file(url, file_name):
     try:
@@ -90,4 +107,8 @@ def download_file(url, file_name):
         print(err)
 
 url, filename = get_filename(args.url)
-download_files(get_filters(filename), url, filename)
+if args.many:
+    filters = get_filters(filename)
+    for i in range(len(filters)):
+        download_files(filters[i], url, filename)
+else: download_file(url, filename)
