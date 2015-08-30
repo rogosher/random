@@ -6,7 +6,7 @@
   permissions.
 
   Executing:
-      `$ mysql -u root -p < mysql_bootstrap.sh`
+      `$ mysql -u root -p < bootstrap_mysql.sh`
 */
 
 SET @dbname = 'simplesite';
