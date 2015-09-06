@@ -6,11 +6,17 @@
   permissions.
 
   Executing:
-      `$ mysql -u root -p < bootstrap_mysql.sh`
+      `$ mysql -u root -p < mysql_bootstrap.sh`
 */
 
-SET @dbname = 'simplesite';
-SET @username = 'simplesite';
+-- Uncomment if not setting via command line.
+-- `mysql -u root -p -e"set @dbname=''; set @username=''; set
+-- @user_password=''; set @admin_password='';" < mysql_bootstrap.sql`
+
+-- SET @dbname = 'mydb';
+-- SET @username = 'mydbuser';
+-- SET @user_password = 'passuser';
+-- SET @admin_password = 'passadmin';
 
 -- create development database
 SET @s = CONCAT('CREATE DATABASE IF NOT EXISTS ', @dbname, '_development');
@@ -33,46 +39,54 @@ DEALLOCATE PREPARE stmt_create;
 -- Create or grant user @username and @username_admin permission on created
 -- databases.
 
--- production user
-SET @user_perms = "Select,Insert,Update,Delete,Lock Tables";
-SET @s = CONCAT("GRANT ", @user_perms," ON ", @dbname, "_development.* TO '",
-	@username, "'@'localhost' IDENTIFIED BY 'word'");
-PREPARE stmt_user FROM @s;
-EXECUTE stmt_user;
-DEALLOCATE PREPARE stmt_user;
-
+-- Set user permissions
+--
+-- production database
 SET @user_perms = "Select,Insert,Update,Delete,Lock Tables";
 SET @s = CONCAT("GRANT ", @user_perms," ON ", @dbname, "_production.* TO '",
-	@username, "'@'localhost' IDENTIFIED BY 'word'");
+	@username, "'@'localhost' IDENTIFIED BY '", @user_password, "'");
 PREPARE stmt_user FROM @s;
 EXECUTE stmt_user;
 DEALLOCATE PREPARE stmt_user;
 
+-- development database
 SET @user_perms = "Select,Insert,Update,Delete,Lock Tables";
-SET @s = CONCAT("GRANT ", @user_perms," ON ", @dbname, "._test* TO '",
-	@username, "'@'localhost' IDENTIFIED BY 'word'");
+SET @s = CONCAT("GRANT ", @user_perms," ON ", @dbname, "_development.* TO '",
+	@username, "'@'localhost' IDENTIFIED BY '", @user_password, "'");
 PREPARE stmt_user FROM @s;
 EXECUTE stmt_user;
 DEALLOCATE PREPARE stmt_user;
 
--- administrative user
+-- test database
+SET @user_perms = "Select,Insert,Update,Delete,Lock Tables";
+SET @s = CONCAT("GRANT ", @user_perms," ON ", @dbname, "_test.* TO '",
+	@username, "'@'localhost' IDENTIFIED BY '", @user_password, "'");
+PREPARE stmt_user FROM @s;
+EXECUTE stmt_user;
+DEALLOCATE PREPARE stmt_user;
+
+-- Set admin permissions
+--
+-- production
 SET @user_perms = "Select,Insert,Update,Delete,Create,Drop,Index,Alter,Lock Tables";
-SET @s = CONCAT("GRANT ", @user_perms," ON ", @dbname, "_development.* TO '",
-	@username, "_admin'@'localhost' IDENTIFIED BY 'word'");
+SET @s = CONCAT("GRANT ", @user_perms," ON ", @dbname, "_production.* TO '",
+	@username, "_admin'@'localhost' IDENTIFIED BY '", @admin_password, "'");
 PREPARE stmt_admin_user FROM @s;
 EXECUTE stmt_admin_user;
 DEALLOCATE PREPARE stmt_admin_user;
 
+-- development
 SET @user_perms = "Select,Insert,Update,Delete,Create,Drop,Index,Alter,Lock Tables";
-SET @s = CONCAT("GRANT ", @user_perms," ON ", @dbname, "_production.* TO '",
-	@username, "_admin'@'localhost' IDENTIFIED BY 'word'");
+SET @s = CONCAT("GRANT ", @user_perms," ON ", @dbname, "_development.* TO '",
+	@username, "_admin'@'localhost' IDENTIFIED BY '", @admin_password, "'");
 PREPARE stmt_admin_user FROM @s;
 EXECUTE stmt_admin_user;
 DEALLOCATE PREPARE stmt_admin_user;
 
+-- test
 SET @user_perms = "Select,Insert,Update,Delete,Create,Drop,Index,Alter,Lock Tables";
 SET @s = CONCAT("GRANT ", @user_perms," ON ", @dbname, "_test.* TO '",
-	@username, "_admin'@'localhost' IDENTIFIED BY 'word'");
+	@username, "_admin'@'localhost' IDENTIFIED BY '", @admin_password, "'");
 PREPARE stmt_admin_user FROM @s;
 EXECUTE stmt_admin_user;
 DEALLOCATE PREPARE stmt_admin_user;
