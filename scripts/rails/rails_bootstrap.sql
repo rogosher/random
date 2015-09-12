@@ -19,19 +19,22 @@
 -- SET @admin_password = 'passadmin';
 
 -- create development database
-SET @s = CONCAT('CREATE DATABASE IF NOT EXISTS ', @dbname, '_development DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci');
+SET @s = CONCAT('CREATE DATABASE IF NOT EXISTS ', @dbname,
+  '_development DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci');
 PREPARE stmt_create FROM @s;
 EXECUTE stmt_create;
 DEALLOCATE PREPARE stmt_create;
 
 -- create production database
-SET @s = CONCAT('CREATE DATABASE IF NOT EXISTS ', @dbname, '_production DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci');
+SET @s = CONCAT('CREATE DATABASE IF NOT EXISTS ', @dbname,
+  '_production DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci');
 PREPARE stmt_create FROM @s;
 EXECUTE stmt_create;
 DEALLOCATE PREPARE stmt_create;
 
 -- create test database
-SET @s = CONCAT('CREATE DATABASE IF NOT EXISTS ', @dbname, '_test DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci');
+SET @s = CONCAT('CREATE DATABASE IF NOT EXISTS ', @dbname,
+  '_test DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci');
 PREPARE stmt_create FROM @s;
 EXECUTE stmt_create;
 DEALLOCATE PREPARE stmt_create;
