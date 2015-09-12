@@ -1,5 +1,5 @@
-# Variable wrapper for setting up MySQL tables for Rails 4
-# author: rogosher
+# Author: rogosher
+# Description: Variable wrapper for setting up MySQL tables for Rails 4
 
 # gen_pass
 #   generate a random password of 30 characters
