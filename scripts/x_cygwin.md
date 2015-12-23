@@ -1,4 +1,4 @@
-## Starting X11 after recieving errors
+## Starting X11 After Recieving Errors
 
 ```
 xinit -- -multiwindow -clipboard
