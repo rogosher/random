@@ -1,7 +1,7 @@
 apt-get update
 
 # system build libraries
-apt-get install build-essentials git
+apt-get install build-essential git
 
 # libvirt support
 apt-get install libxslt-dev libxml2-dev libvirt-dev zlib1g-dev
