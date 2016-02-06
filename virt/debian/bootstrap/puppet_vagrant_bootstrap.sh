@@ -2,7 +2,7 @@
 
 mkdir -p ./puppet/modules ./puppet/manifests ./puppet/hieradata
 touch ./puppet/manifests/default.pp                            
-cat > hiera.yaml <<EOL                                         
+cat > hiera.yaml <<EOF                                         
 ---                                                            
 :backends:                                                     
   - yaml                                                       
@@ -11,4 +11,4 @@ cat > hiera.yaml <<EOL
 :hierarchy:                                                    
   - "node/%{::hostname}"                                       
   - common                                                     
-EOL                                                            
+EOF                                                            
