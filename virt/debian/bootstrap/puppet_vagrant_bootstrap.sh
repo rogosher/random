@@ -1,4 +1,4 @@
-#!/bin/bash                                                    
+#!/bin/bash
 
 mkdir -p ./puppet/modules ./puppet/manifests ./puppet/hieradata
 touch ./puppet/manifests/default.pp
@@ -12,3 +12,5 @@ cat > hiera.yaml <<EOF
   - "node/%{::hostname}"
   - common
 EOF
+
+cat hiera.yml
