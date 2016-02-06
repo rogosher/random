@@ -11,4 +11,4 @@ cat > hiera.yaml <<EOF
 :hierarchy:                                                    
   - "node/%{::hostname}"                                       
   - common                                                     
-EOF                                                            
+EOF
