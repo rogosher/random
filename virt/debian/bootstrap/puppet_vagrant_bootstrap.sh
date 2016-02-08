@@ -13,4 +13,4 @@ cat > hiera.yaml <<EOF
   - common
 EOF
 
-cat hiera.yml
+cat hiera.yaml
